@@ -7,7 +7,11 @@ import (
 
 type Config struct {
 	rest.RestConf
+	JwtAuth struct {
+		AccessSecret string
+	}
 
 	OrderRpcConf   zrpc.RpcClientConf
 	PaymentRpcConf zrpc.RpcClientConf
+	TravelRpcConf  zrpc.RpcClientConf
 }

@@ -1,18 +1,18 @@
 Name: travel-api
 Host: 0.0.0.0
-Port: 8003
+Port: 1003
 Mode: dev
 
 #监控
 Prometheus:
   Host: 0.0.0.0
-  Port: 9091
+  Port: 4006
   Path: /metrics
 
 #链路追踪
 Telemetry:
   Name: travel-api
-  Endpoint: http://jager_collector:14268/api/traces
+  Endpoint: http://jaeger:14268/api/traces
   Sampler: 1.0
   Batcher: jaeger
 
@@ -29,8 +29,11 @@ Cache:
 #rpc
 UsercenterRpcConf:
   Endpoints:
-    - usercenter-rpc:9002
+    - 12.0.0.1:2004
+  NonBlock: true
+
 TravelRpcConf:
   Endpoints:
-    - travel-rpc:9003
+    - 127.0.0.1:2003
+  NonBlock: true
 

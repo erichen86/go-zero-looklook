@@ -1,18 +1,22 @@
 Name: payment-api
 Host: 0.0.0.0
-Port: 8005
+Port: 1002
 Mode: dev
+
+#jwtAuth
+JwtAuth:
+  AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0
 
 #监控
 Prometheus:
   Host: 0.0.0.0
-  Port: 9091
+  Port: 4004
   Path: /metrics
 
 #链路追踪
 Telemetry:
   Name: payment-api
-  Endpoint: http://jager_collector:14268/api/traces
+  Endpoint: http://jaeger:14268/api/traces
   Sampler: 1.0
   Batcher: jaeger
 
@@ -46,12 +50,15 @@ WxPayConf:
 #rpc service
 PaymentRpcConf:
   Endpoints:
-    - payment-rpc:9005
+    - 127.0.0.1:2002
+  NonBlock: true
 
 OrderRpcConf:
   Endpoints:
-    - order-rpc:9004
+    - 127.0.0.1:2001
+  NonBlock: true
 
 UsercenterRpcConf:
   Endpoints:
-    - usercenter-rpc:9002
+    - 127.0.0.1:2004
+  NonBlock: true

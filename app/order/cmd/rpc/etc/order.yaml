@@ -1,5 +1,5 @@
 Name: order-rpc
-ListenOn: 0.0.0.0:9004
+ListenOn: 0.0.0.0:2001
 Mode: dev
 
 Log:
@@ -9,13 +9,13 @@ Log:
 #监控
 Prometheus:
   Host: 0.0.0.0
-  Port: 9091
+  Port: 4002
   Path: /metrics
 
 #链路追踪
 Telemetry:
   Name: order-rpc
-  Endpoint:  http://jager_collector:14268/api/traces
+  Endpoint:  http://jaeger:14268/api/traces
   Sampler: 1.0
   Batcher: jaeger
 
@@ -32,9 +32,6 @@ Cache:
 #rpc
 TravelRpcConf:
   Endpoints:
-    - travel-rpc:9003
+    - 127.0.0.1:2003
+  NonBlock: true
 
-#rpc
-MqueueRpcConf:
-  Endpoints:
-    - mqueue-rpc:9006

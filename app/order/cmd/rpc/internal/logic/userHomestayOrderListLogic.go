@@ -2,7 +2,7 @@ package logic
 
 import (
 	"context"
-	"fmt"
+	"github.com/Masterminds/squirrel"
 
 	"looklook/app/order/cmd/rpc/internal/svc"
 	"looklook/app/order/cmd/rpc/pb"
@@ -28,13 +28,17 @@ func NewUserHomestayOrderListLogic(ctx context.Context, svcCtx *svc.ServiceConte
 	}
 }
 
-// 用户民宿订单.
 func (l *UserHomestayOrderListLogic) UserHomestayOrderList(in *pb.UserHomestayOrderListReq) (*pb.UserHomestayOrderListResp, error) {
 
-	fmt.Printf("userId : %d \n", in.UserId)
-	list, err := l.svcCtx.HomestayOrderModel.ListByUserIdTradeState(in.LastId, in.PageSize, in.UserId, in.TraderState)
+	whereBuilder:= l.svcCtx.HomestayOrderModel.RowBuilder().Where(squirrel.Eq{"user_id":in.UserId})
+	//There are supported states in the filter, otherwise return all
+	if in.TraderState >= model.HomestayOrderTradeStateCancel &&  in.TraderState <= model.HomestayOrderTradeStateExpire {
+		whereBuilder = whereBuilder.Where(squirrel.Eq{"trade_state":in.TraderState})
+	}
+
+	list, err := l.svcCtx.HomestayOrderModel.FindPageListByIdDESC(l.ctx,whereBuilder,in.LastId, in.PageSize)
 	if err != nil && err != model.ErrNotFound {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "获取用户民宿订单失败 err : %v , in :%+v", err, in)
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Failed to get user's homestay order err : %v , in :%+v", err, in)
 	}
 
 	var resp []*pb.HomestayOrder

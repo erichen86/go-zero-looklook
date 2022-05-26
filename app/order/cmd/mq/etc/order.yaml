@@ -1,18 +1,18 @@
 Name: order-mq
 Host: 0.0.0.0
-Port: 7004
+Port: 3001
 Mode: dev
 
 #监控
 Prometheus:
   Host: 0.0.0.0
-  Port: 9091
+  Port: 4003
   Path: /metrics
 
 #链路追踪
 Telemetry:
   Name: order-mq
-  Endpoint: http://jager_collector:14268/api/traces
+  Endpoint: http://jaeger:14268/api/traces
   Sampler: 1.0
   Batcher: jaeger
 
@@ -39,12 +39,10 @@ PaymentUpdateStatusConf:
 #rpc
 OrderRpcConf:
   Endpoints:
-    - order-rpc:9004
-
-MqueueRpcConf:
-  Endpoints:
-    - mqueue-rpc:9006
+    - 127.0.0.1:2001
+  NonBlock: true
 
 UsercenterRpcConf:
   Endpoints:
-    - usercenter-rpc:9002
+    - 127.0.0.1:2004
+  NonBlock: true
